@@ -11,6 +11,12 @@ a {
   color: #0077cc;
 }
 
+.logo-img {
+    width: 150px;
+    height: auto;
+    margin: 10px;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;
