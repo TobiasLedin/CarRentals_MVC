@@ -1,3 +1,10 @@
+using Elfie.Serialization;
+using FribergCarRentals.Data;
+using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
+using System.Drawing;
+using System;
+
 namespace FribergCarRentals
 {
     public class Program
@@ -5,6 +12,11 @@ namespace FribergCarRentals
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = CarRentalDB; Integrated Security = True; Connect Timeout = 30; Encrypt = False; Trust Server Certificate = False; Application Intent = ReadWrite; Multi Subnet Failover = False")
+            );
+
+            builder.Services.AddTransient<IVehicle, VehicleRepository>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
