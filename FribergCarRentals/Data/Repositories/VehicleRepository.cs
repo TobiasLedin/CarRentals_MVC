@@ -1,7 +1,8 @@
-﻿using FribergCarRentals.Models;
+﻿using FribergCarRentals.Data.Interfaces;
+using FribergCarRentals.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FribergCarRentals.Data
+namespace FribergCarRentals.Data.Repositories
 {
     public class VehicleRepository : IVehicle
     {
@@ -10,7 +11,7 @@ namespace FribergCarRentals.Data
         //Constructor taking in ApplicationDbContext)
         public VehicleRepository(ApplicationDbContext applicationDbContext)
         {
-            this._applicationDbContext = applicationDbContext;
+            _applicationDbContext = applicationDbContext;
         }
 
         public IEnumerable<Vehicle> GetAll()
@@ -18,11 +19,9 @@ namespace FribergCarRentals.Data
             return _applicationDbContext.Vehicles.OrderBy(x => x.VehicleId);
         }
 
-        public Vehicle getById(int id)
+        public Vehicle GetById(int id)
         {
-            return _applicationDbContext.Vehicles.FirstOrDefault(x => x.VehicleId == id);      
+            return _applicationDbContext.Vehicles.FirstOrDefault(x => x.VehicleId == id);
         }
-
-       
     }
 }

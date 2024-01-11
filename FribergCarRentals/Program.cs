@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
 using System.Drawing;
 using System;
+using FribergCarRentals.Data.Interfaces;
+using FribergCarRentals.Data.Repositories;
 
 namespace FribergCarRentals
 {

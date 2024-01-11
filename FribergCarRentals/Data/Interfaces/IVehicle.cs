@@ -1,10 +1,10 @@
 ﻿using FribergCarRentals.Models;
 
-namespace FribergCarRentals.Data
+namespace FribergCarRentals.Data.Interfaces
 {
     public interface IVehicle
     {
-        Vehicle getById(int id);
+        Vehicle GetById(int id);
         IEnumerable<Vehicle> GetAll();
 
     }
