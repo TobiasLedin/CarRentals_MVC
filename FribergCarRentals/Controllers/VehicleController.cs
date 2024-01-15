@@ -1,4 +1,7 @@
-﻿using FribergCarRentals.Data.Interfaces;
+﻿using FribergCarRentals.Data;
+using FribergCarRentals.Data.Interfaces;
+using FribergCarRentals.Data.Repositories;
+using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +13,7 @@ namespace FribergCarRentals.Controllers
 
         public VehicleController(IVehicle vehicleRepository)
         {
-            this._vehicleRepository = vehicleRepository; 
+            _vehicleRepository = vehicleRepository; 
         }
 
 
@@ -35,11 +38,19 @@ namespace FribergCarRentals.Controllers
         // POST: VehicleController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create([Bind("VehicleId, Brand, Model, Year, DailyRate")] Vehicle vehicle)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid) 
+                {
+                    _vehicleRepository.Create(vehicle);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return View();
+                }
             }
             catch
             {
@@ -48,45 +59,81 @@ namespace FribergCarRentals.Controllers
         }
 
         // GET: VehicleController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            if (id == null || _vehicleRepository.GetAll() == null)
+            {
+                return NotFound();
+            }
+            var vehicle = _vehicleRepository.GetById((int) id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return View(vehicle);
         }
 
         // POST: VehicleController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Vehicle vehicle)
         {
-            try
+            if (id != vehicle.VehicleId)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+            if (ModelState.IsValid)
             {
-                return View();
+                try
+                {
+                    _vehicleRepository.Update(vehicle);
+                }
+                catch (Exception)
+                {
+                    return View();
+                }
+                return RedirectToAction("Index");
             }
+            return View(vehicle);
         }
 
         // GET: VehicleController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            if (id == null || _vehicleRepository.GetAll() == null)
+            {
+                return NotFound();
+            }
+            var vehicle = _vehicleRepository.GetById((int)id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return View(vehicle);
         }
 
         // POST: VehicleController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Vehicle vehicle)
         {
-            try
+            if (id != vehicle.VehicleId)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+            if (ModelState.IsValid)
             {
-                return View();
+                try
+                {
+                    _vehicleRepository.Delete(vehicle);
+                }
+                catch (Exception)
+                {
+                    return View();
+                }
+                return RedirectToAction("Index");
             }
+            return View(vehicle);
         }
 
        

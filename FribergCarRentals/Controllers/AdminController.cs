@@ -1,10 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FribergCarRentals.Data.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentals.Controllers
 {
     public class AdminController : Controller
     {
+        private readonly IAdmin _adminRepository;
+
+        public AdminController(IAdmin adminRepository)
+        {
+            _adminRepository = adminRepository;
+        }
+
+
         // GET: AdminController
         public ActionResult Index()
         {
@@ -17,27 +26,6 @@ namespace FribergCarRentals.Controllers
             return View();
         }
 
-        // GET: AdminController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AdminController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // GET: AdminController/Edit/5
         public ActionResult Edit(int id)
         {
@@ -48,27 +36,6 @@ namespace FribergCarRentals.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AdminController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {

@@ -18,10 +18,13 @@ namespace FribergCarRentals
             options.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = CarRentalDB; Integrated Security = True; Connect Timeout = 30; Encrypt = False; Trust Server Certificate = False; Application Intent = ReadWrite; Multi Subnet Failover = False")
             );
 
-            builder.Services.AddTransient<IVehicle, VehicleRepository>();
-
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddTransient<IAdmin, AdminRepository>();
+            builder.Services.AddTransient<IBooking, BookingRepository>();
+            builder.Services.AddTransient<ICustomer, CustomerRepository>();
+            builder.Services.AddTransient<IVehicle, VehicleRepository>();
 
             var app = builder.Build();
 

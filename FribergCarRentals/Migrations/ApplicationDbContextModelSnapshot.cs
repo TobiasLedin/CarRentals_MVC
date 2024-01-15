@@ -22,6 +22,27 @@ namespace FribergCarRentals.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("FribergCarRentals.Models.Admin", b =>
+                {
+                    b.Property<int>("AdminId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdminId"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AdminId");
+
+                    b.ToTable("Admins");
+                });
+
             modelBuilder.Entity("FribergCarRentals.Models.Booking", b =>
                 {
                     b.Property<int>("BookingId")
@@ -38,12 +59,6 @@ namespace FribergCarRentals.Migrations
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Delivered")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Returned")
-                        .HasColumnType("bit");
 
                     b.Property<int>("VehicleId")
                         .HasColumnType("int");
@@ -113,21 +128,9 @@ namespace FribergCarRentals.Migrations
                     b.Property<double>("DailyRate")
                         .HasColumnType("float");
 
-                    b.Property<int>("FuelType")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("InService")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Milage")
-                        .HasColumnType("int");
-
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Retired")
-                        .HasColumnType("bit");
 
                     b.Property<int>("Year")
                         .HasColumnType("int");

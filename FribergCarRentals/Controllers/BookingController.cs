@@ -1,10 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FribergCarRentals.Data.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentals.Controllers
 {
     public class BookingController : Controller
     {
+        private readonly IBooking _bookingRepository;
+
+        public BookingController(IBooking bookingRepository)
+        {
+            _bookingRepository = bookingRepository;
+        }
+
+
         // GET: BookingController
         public ActionResult Index()
         {

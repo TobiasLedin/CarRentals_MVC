@@ -1,10 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FribergCarRentals.Data.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentals.Controllers
 {
     public class CustomerController : Controller
     {
+        private readonly ICustomer _customerRepository;
+
+        public CustomerController(ICustomer customerRepository)
+        {
+            _customerRepository = customerRepository;
+        }
+
+
         // GET: CustomerController
         public ActionResult Index()
         {

@@ -6,11 +6,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FribergCarRentals.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Admins",
+                columns: table => new
+                {
+                    AdminId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Admins", x => x.AdminId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
@@ -39,11 +53,7 @@ namespace FribergCarRentals.Migrations
                     Brand = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false),
-                    FuelType = table.Column<int>(type: "int", nullable: false),
-                    Milage = table.Column<int>(type: "int", nullable: false),
-                    DailyRate = table.Column<double>(type: "float", nullable: false),
-                    InService = table.Column<bool>(type: "bit", nullable: false),
-                    Retired = table.Column<bool>(type: "bit", nullable: false)
+                    DailyRate = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,9 +69,7 @@ namespace FribergCarRentals.Migrations
                     BookingStart = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BookingEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
-                    VehicleId = table.Column<int>(type: "int", nullable: false),
-                    Delivered = table.Column<bool>(type: "bit", nullable: false),
-                    Returned = table.Column<bool>(type: "bit", nullable: false)
+                    VehicleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -94,6 +102,9 @@ namespace FribergCarRentals.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Admins");
+
             migrationBuilder.DropTable(
                 name: "Bookings");
 
