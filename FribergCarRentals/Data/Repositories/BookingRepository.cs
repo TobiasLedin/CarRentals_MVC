@@ -3,7 +3,7 @@ using FribergCarRentals.Models;
 
 namespace FribergCarRentals.Data.Repositories
 {
-    public class BookingRepository : IBooking
+    public class BookingRepository : IBookingRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
 

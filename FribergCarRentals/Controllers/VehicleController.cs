@@ -1,19 +1,16 @@
-﻿using FribergCarRentals.Data;
-using FribergCarRentals.Data.Interfaces;
-using FribergCarRentals.Data.Repositories;
+﻿using FribergCarRentals.Data.Interfaces;
 using FribergCarRentals.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FribergCarRentals.Controllers
 {
     public class VehicleController : Controller
     {
-        private readonly IVehicle _vehicleRepository;
+        private readonly IVehicleRepository _vehicleRepository;
 
-        public VehicleController(IVehicle vehicleRepository)
+        public VehicleController(IVehicleRepository vehicleRepository)
         {
-            _vehicleRepository = vehicleRepository; 
+            _vehicleRepository = vehicleRepository;
         }
 
 
@@ -26,7 +23,8 @@ namespace FribergCarRentals.Controllers
         // GET: VehicleController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var vehicle = _vehicleRepository.GetById(id);
+            return View(vehicle);
         }
 
         // GET: VehicleController/Create
@@ -38,11 +36,11 @@ namespace FribergCarRentals.Controllers
         // POST: VehicleController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("VehicleId, Brand, Model, Year, DailyRate")] Vehicle vehicle)
+        public ActionResult Create([Bind("VehicleId,Brand,Model,Year,DailyRate")] Vehicle vehicle)
         {
             try
             {
-                if (ModelState.IsValid) 
+                if (ModelState.IsValid)
                 {
                     _vehicleRepository.Create(vehicle);
                     return RedirectToAction("Index");
@@ -65,7 +63,7 @@ namespace FribergCarRentals.Controllers
             {
                 return NotFound();
             }
-            var vehicle = _vehicleRepository.GetById((int) id);
+            var vehicle = _vehicleRepository.GetById((int)id);
             if (vehicle == null)
             {
                 return NotFound();
@@ -100,7 +98,7 @@ namespace FribergCarRentals.Controllers
         // GET: VehicleController/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null || _vehicleRepository.GetAll() == null)
+            if (id == null || _vehicleRepository.GetAll() == null)      //TODO: Remove getAll() since empty list is provided when no vehicles in database.
             {
                 return NotFound();
             }
@@ -121,21 +119,16 @@ namespace FribergCarRentals.Controllers
             {
                 return NotFound();
             }
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _vehicleRepository.Delete(vehicle);
-                }
-                catch (Exception)
-                {
-                    return View();
-                }
-                return RedirectToAction("Index");
+                _vehicleRepository.Delete(id);
             }
-            return View(vehicle);
+            catch (Exception)
+            {
+                return View();
+            }
+            return RedirectToAction("Index");
         }
-
-       
     }
 }
+

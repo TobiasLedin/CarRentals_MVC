@@ -1,50 +1,114 @@
 ﻿using FribergCarRentals.Data.Interfaces;
-using Microsoft.AspNetCore.Http;
+using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FribergCarRentals.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly IAdmin _adminRepository;
+        private readonly IAdminRepository _adminRepo;
+        private readonly IVehicleRepository _vehicleRepo;
+        private readonly ICustomerRepository _customerRepo;
+        private readonly IBookingRepository _bookingRepo;
+        private static Admin? _activeAdmin;
 
-        public AdminController(IAdmin adminRepository)
+        public AdminController(IAdminRepository adminRepo, IVehicleRepository vehicleRepo, ICustomerRepository customerRepo, IBookingRepository bookingRepo)
         {
-            _adminRepository = adminRepository;
+            _adminRepo = adminRepo;
+            _vehicleRepo = vehicleRepo;
+            _customerRepo = customerRepo;
+            _bookingRepo = bookingRepo;
         }
 
-
-        // GET: AdminController
+        // Admininistrator login screen redirect
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction(nameof(Login));
         }
 
-        // GET: AdminController/Details/5
-        public ActionResult Details(int id)
+
+        public ActionResult Login()
         {
             return View();
         }
 
-        // GET: AdminController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Login(string email, string password)
         {
-            try
+            var adminObj = _adminRepo.GetByEmail(email);
+            if (adminObj == null)
             {
-                return RedirectToAction(nameof(Index));
+                return View();      //TODO: Error message
             }
-            catch
+            if (adminObj.Password == password)
             {
-                return View();
+                _activeAdmin = adminObj;
+                return RedirectToAction(nameof(Overview));
+            }
+
+            return View();
+
+        }
+
+        public ActionResult Logout()
+        {
+            
+            _activeAdmin = null;
+            return RedirectToAction(nameof(Login));  //TODO: Logout message?
+        }
+
+        public ActionResult Overview()
+        {
+            if (_activeAdmin == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            else
+            {
+                return View(_activeAdmin);
             }
         }
+
+        public ActionResult VehicleOverview()
+        {
+            
+            if (_activeAdmin == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            else
+            {
+                return RedirectToAction("Index", "AdminVehicle", _activeAdmin);
+            }
+        }
+
+        public ActionResult BookingOverview()
+        {
+            if (_activeAdmin == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            else
+            {
+                return RedirectToAction("Index", "AdminBooking", _activeAdmin);
+            }
+        }
+
+        public ActionResult CustomerOverview()
+        {
+            
+            if (_activeAdmin == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            else
+            {
+                return RedirectToAction("Index", "AdminCustomer", _activeAdmin);
+            }
+        }
+
     }
 }
+

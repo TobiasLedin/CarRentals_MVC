@@ -3,7 +3,7 @@ using FribergCarRentals.Models;
 
 namespace FribergCarRentals.Data.Repositories
 {
-    public class AdminRepository : IAdmin
+    public class AdminRepository : IAdminRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
@@ -12,9 +12,9 @@ namespace FribergCarRentals.Data.Repositories
             this._applicationDbContext = applicationDbContext;
         }
 
-        public Admin GetById(int id)
+        public Admin GetByEmail(string email)
         {
-            var admin = _applicationDbContext.Admins.Find(id);
+            var admin = _applicationDbContext.Admins.FirstOrDefault(x => x.Email == email);
             return admin;
         }
 

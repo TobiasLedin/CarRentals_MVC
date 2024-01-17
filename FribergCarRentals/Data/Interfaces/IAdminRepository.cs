@@ -2,9 +2,9 @@
 
 namespace FribergCarRentals.Data.Interfaces
 {
-    public interface IAdmin
+    public interface IAdminRepository
     {
-        Admin GetById(int id);
+        Admin GetByEmail(string email);
         void Update(Admin admin);
 
     }

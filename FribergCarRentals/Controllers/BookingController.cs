@@ -6,9 +6,9 @@ namespace FribergCarRentals.Controllers
 {
     public class BookingController : Controller
     {
-        private readonly IBooking _bookingRepository;
+        private readonly IBookingRepository _bookingRepository;
 
-        public BookingController(IBooking bookingRepository)
+        public BookingController(IBookingRepository bookingRepository)
         {
             _bookingRepository = bookingRepository;
         }

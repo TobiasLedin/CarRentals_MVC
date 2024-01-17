@@ -16,15 +16,16 @@ namespace FribergCarRentals
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = CarRentalDB; Integrated Security = True; Connect Timeout = 30; Encrypt = False; Trust Server Certificate = False; Application Intent = ReadWrite; Multi Subnet Failover = False")
-            );
+            );  //TODO: Hide connectionstring in AppSettings.json
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddTransient<IAdmin, AdminRepository>();
-            builder.Services.AddTransient<IBooking, BookingRepository>();
-            builder.Services.AddTransient<ICustomer, CustomerRepository>();
-            builder.Services.AddTransient<IVehicle, VehicleRepository>();
+            builder.Services.AddTransient<IAdminRepository, AdminRepository>();
+            builder.Services.AddTransient<IBookingRepository, BookingRepository>();
+            builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddTransient<IVehicleRepository, VehicleRepository>();
+
 
             var app = builder.Build();
 

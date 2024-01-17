@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FribergCarRentals.Data.Repositories
 {
-    public class VehicleRepository : IVehicle
+    public class VehicleRepository : IVehicleRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
@@ -24,7 +24,6 @@ namespace FribergCarRentals.Data.Repositories
             {
 
             }
-            
         }
 
         public void Delete(int id)

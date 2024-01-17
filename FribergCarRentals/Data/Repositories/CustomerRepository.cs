@@ -3,7 +3,7 @@ using FribergCarRentals.Models;
 
 namespace FribergCarRentals.Data.Repositories
 {
-    public class CustomerRepository : ICustomer
+    public class CustomerRepository : ICustomerRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
 

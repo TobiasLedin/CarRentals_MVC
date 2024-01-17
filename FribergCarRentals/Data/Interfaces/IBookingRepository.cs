@@ -2,7 +2,7 @@
 
 namespace FribergCarRentals.Data.Interfaces
 {
-    public interface IBooking
+    public interface IBookingRepository
     {
         void Create(Booking booking);
         Booking GetById(int id);

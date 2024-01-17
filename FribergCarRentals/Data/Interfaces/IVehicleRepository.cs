@@ -2,7 +2,7 @@
 
 namespace FribergCarRentals.Data.Interfaces
 {
-    public interface IVehicle
+    public interface IVehicleRepository
     {
         void Create(Vehicle vehicle);
         Vehicle GetById(int id);

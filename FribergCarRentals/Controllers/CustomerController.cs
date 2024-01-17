@@ -6,9 +6,9 @@ namespace FribergCarRentals.Controllers
 {
     public class CustomerController : Controller
     {
-        private readonly ICustomer _customerRepository;
+        private readonly ICustomerRepository _customerRepository;
 
-        public CustomerController(ICustomer customerRepository)
+        public CustomerController(ICustomerRepository customerRepository)
         {
             _customerRepository = customerRepository;
         }
