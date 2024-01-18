@@ -33,7 +33,7 @@ namespace FribergCarRentals.Controllers
         }
 
         // GET: AdminCustomer/Create
-        public IActionResult Create()
+        public ActionResult Create()
         {
             return View();
         }
