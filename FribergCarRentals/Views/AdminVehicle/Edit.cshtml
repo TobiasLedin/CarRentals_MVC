@@ -15,23 +15,28 @@
             <input type="hidden" asp-for="VehicleId" />
             <div class="form-group">
                 <label asp-for="Brand" class="control-label"></label>
-                <input asp-for="Brand" class="form-control" />
+                <input asp-for="Brand" value="@Model.Brand" class="form-control" />
                 <span asp-validation-for="Brand" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Model" class="control-label"></label>
-                <input asp-for="Model" class="form-control" />
+                <input asp-for="Model" value="@Model.Model" class="form-control" />
                 <span asp-validation-for="Model" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Year" class="control-label"></label>
-                <input asp-for="Year" class="form-control" />
+                <input asp-for="Year" value="@Model.Year" class="form-control" />
                 <span asp-validation-for="Year" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DailyRate" class="control-label"></label>
-                <input asp-for="DailyRate" class="form-control" />
-                <span asp-validation-for="DailyRate" class="text-danger"></span>
+                <label asp-for="Comment" class="control-label"></label>
+                <input asp-for="Comment" value="@Model.Comment ?? string.Empty" class="form-control" />
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageUrl" class="control-label"></label>
+                <input asp-for="ImageUrl" type="url" class="form-control" />
+                <span asp-validation-for="Year" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

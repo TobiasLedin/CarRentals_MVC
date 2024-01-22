@@ -1,3 +1,4 @@
+using FribergCarRentals.Data.Interfaces;
 using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -6,11 +7,11 @@ namespace FribergCarRentals.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IVehicleRepository _vehicleRepo;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IVehicleRepository vehicleRepo)
         {
-            _logger = logger;
+            _vehicleRepo = vehicleRepo;
         }
 
 
@@ -19,10 +20,12 @@ namespace FribergCarRentals.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Vehicles()
         {
-            return View();
+
+            return View(_vehicleRepo.GetAll());
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

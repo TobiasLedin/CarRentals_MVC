@@ -1,6 +1,5 @@
 ﻿using FribergCarRentals.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 
 namespace FribergCarRentals.Data
 {
@@ -13,8 +12,8 @@ namespace FribergCarRentals.Data
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-
+            
         }
+
     }
-        
 }

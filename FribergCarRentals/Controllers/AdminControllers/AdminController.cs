@@ -1,9 +1,10 @@
 ﻿using FribergCarRentals.Data.Interfaces;
 using FribergCarRentals.Models;
+using FribergCarRentals.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 
-namespace FribergCarRentals.Controllers
+namespace FribergCarRentals.Controllers.AdminControllers
 {
     public class AdminController : Controller
     {
@@ -27,7 +28,6 @@ namespace FribergCarRentals.Controllers
             return RedirectToAction(nameof(Login));
         }
 
-
         public ActionResult Login()
         {
             return View();
@@ -37,78 +37,64 @@ namespace FribergCarRentals.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(string email, string password)
         {
-            var adminObj = _adminRepo.GetByEmail(email);
-            if (adminObj == null)
+            var admin = _adminRepo.GetByEmail(email);
+            if (admin == null)
             {
                 return View();      //TODO: Error message
             }
-            if (adminObj.Password == password)
+            if (admin.Password == password)
             {
-                _activeAdmin = adminObj;
+                _activeAdmin = admin;
                 return RedirectToAction(nameof(Overview));
             }
-
             return View();
-
         }
 
         public ActionResult Logout()
         {
-            
             _activeAdmin = null;
             return RedirectToAction(nameof(Login));  //TODO: Logout message?
         }
 
         public ActionResult Overview()
         {
-            if (_activeAdmin == null)
+            OverviewVM overviewVM = new()
             {
-                return RedirectToAction(nameof(Login));
-            }
-            else
-            {
-                return View(_activeAdmin);
-            }
+                DeliveryToday = _bookingRepo.GetAll().Where(x => x.BookingStart == DateTime.Now).Count(),
+                DeliveryUpcoming = _bookingRepo.GetAll().Where(x => x.BookingStart > DateTime.Now).Count(),
+                FleetSize = _vehicleRepo.GetAll().Count(),
+                CustomerStock = _customerRepo.GetAll().Count()
+            };
+            var action = View(overviewVM);
+            return CheckForAdmin(action);
         }
 
         public ActionResult VehicleOverview()
         {
-            
-            if (_activeAdmin == null)
-            {
-                return RedirectToAction(nameof(Login));
-            }
-            else
-            {
-                return RedirectToAction("Index", "AdminVehicle", _activeAdmin);
-            }
+            var action = RedirectToAction("Index", "AdminVehicle", _activeAdmin);
+            return CheckForAdmin(action);
         }
 
         public ActionResult BookingOverview()
         {
-            if (_activeAdmin == null)
-            {
-                return RedirectToAction(nameof(Login));
-            }
-            else
-            {
-                return RedirectToAction("Index", "AdminBooking", _activeAdmin);
-            }
+            var action = RedirectToAction("Index", "AdminBooking", _activeAdmin);
+            return CheckForAdmin(action);
         }
 
         public ActionResult CustomerOverview()
         {
-            
-            if (_activeAdmin == null)
-            {
-                return RedirectToAction(nameof(Login));
-            }
-            else
-            {
-                return RedirectToAction("Index", "AdminCustomer", _activeAdmin);
-            }
+            var action = RedirectToAction("Index", "AdminCustomer", _activeAdmin);
+            return CheckForAdmin(action);
         }
 
+        private ActionResult CheckForAdmin(ActionResult action)
+        {
+            if (_activeAdmin == null)
+            {
+                action = RedirectToAction(nameof(Login));
+            }
+            return action;
+        }
     }
 }
 

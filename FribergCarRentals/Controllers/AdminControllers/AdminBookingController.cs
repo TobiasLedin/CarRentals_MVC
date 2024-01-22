@@ -2,7 +2,7 @@
 using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FribergCarRentals.Controllers
+namespace FribergCarRentals.Controllers.AdminControllers
 {
     public class AdminBookingController : Controller
     {
@@ -18,11 +18,8 @@ namespace FribergCarRentals.Controllers
         public ActionResult Index(Admin activeAdmin)
         {
             _activeAdmin = activeAdmin;
-            if (_activeAdmin == null)
-            {
-                RedirectToAction("Login", "Admin");
-            }
-            return View(_bookingRepo.GetAll());
+            var action = View(_bookingRepo.GetAll());
+            return CheckForAdmin(action);
         }
 
         public ActionResult Logout()
@@ -31,26 +28,21 @@ namespace FribergCarRentals.Controllers
             return RedirectToAction("Logout", "Admin");
         }
 
-
         // GET: AdminBooking/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (_activeAdmin == null)
-            {
-                RedirectToAction("Login", "Admin");
-            }
+            Booking? booking = null;
+            var action = View(booking);
             if (id == null)
             {
                 return NotFound();
             }
-
-            var booking = _bookingRepo.GetById((int)id);
+            booking = _bookingRepo.GetById((int)id);
             if (booking == null)
             {
                 return NotFound();
             }
-
-            return View(booking);
+            return CheckForAdmin(action);
         }
 
         // POST: AdminBooking/Delete/5
@@ -59,13 +51,20 @@ namespace FribergCarRentals.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var booking = _bookingRepo.GetById(id);
-            if (booking != null)
+            if (booking != null && _activeAdmin != null)
             {
                 _bookingRepo.Delete(id);
             }
-
             return RedirectToAction(nameof(Index));
         }
 
+        private ActionResult CheckForAdmin(ActionResult action)
+        {
+            if (_activeAdmin == null)
+            {
+                action = RedirectToAction("Login", "Admin");
+            }
+            return action;
+        }
     }
 }

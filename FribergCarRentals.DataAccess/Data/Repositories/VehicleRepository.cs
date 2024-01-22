@@ -69,7 +69,7 @@ namespace FribergCarRentals.Data.Repositories
             }
             else
             {
-                var vehicle = _applicationDbContext.Vehicles.FirstOrDefault(x => x.VehicleId == id);
+                var vehicle = _applicationDbContext.Vehicles.Find(id);  //TODO: Utvärdera Find, alt byt till FirstOrDefault().
                 return vehicle;
             }
                 

@@ -1,5 +1,6 @@
 ﻿using FribergCarRentals.Data.Interfaces;
 using FribergCarRentals.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FribergCarRentals.Data.Repositories
 {
@@ -61,6 +62,12 @@ namespace FribergCarRentals.Data.Repositories
             }
         }
 
+        public Customer GetByEmail(string email)
+        {
+            var customer = _applicationDbContext.Customers.FirstOrDefault(x => x.Email == email);
+            return customer;
+        }
+
         public Customer GetById(int id)
         {
             if (!_applicationDbContext.Customers.Any())
@@ -69,7 +76,7 @@ namespace FribergCarRentals.Data.Repositories
             }
             else
             {
-                var customer = _applicationDbContext.Customers.Find(id);  //TODO: Utvärdera Find, alt byt till FirstOrDefault().
+                var customer = _applicationDbContext.Customers.Include(x => x.Bookings).FirstOrDefault(y => y.CustomerId == id);
                 return customer;
             }
 

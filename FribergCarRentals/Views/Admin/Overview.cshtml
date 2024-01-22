@@ -1,4 +1,4 @@
-﻿@model FribergCarRentals.Models.Admin;
+﻿@model FribergCarRentals.ViewModels.OverviewVM;
 
    
 @{
@@ -7,7 +7,11 @@
 
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Admin overview page</p>
-    <p></p>
+    <h1 class="display-4">Admin overview</h1>
+    
+    <p>Deliveries today: @Model.DeliveryToday</p>
+    <p>Upcoming deliveries: @Model.DeliveryUpcoming</p>
+    <p>Fleet size: @Model.FleetSize</p>
+    <p>Customer stock: @Model.CustomerStock</p>
+    
 </div>

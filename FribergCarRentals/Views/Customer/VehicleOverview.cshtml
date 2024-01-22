@@ -1,19 +1,17 @@
 ﻿@model IEnumerable<FribergCarRentals.Models.Vehicle>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "VehicleOverview";
 }
 
-<h1>Index</h1>
+<h1>Vehicle Overview</h1>
 
-<p>
-    <a asp-action="Create">Create new vehicle</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                Image
+                @Html.DisplayNameFor(model => model.ImageUrl)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Brand)
@@ -24,16 +22,19 @@
             <th>
                 @Html.DisplayNameFor(model => model.Year)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
             
+            <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
-            
         <tr>
-             <td>
-                    <img src=@Html.DisplayFor(modelItem => item.ImageUrl) alt="Vehicle image" style="max-width: 100px; max-height: 100px; width: auto; height: auto;" />
-                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageUrl)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Brand)
             </td>
@@ -43,16 +44,16 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Year)
             </td>
-            
-            
-        </tr>
-        
-        <tr>
-                <td style="background-color: grey">
-                    <a asp-action="Edit" asp-route-id="@item.VehicleId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.VehicleId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.VehicleId">Delete</a>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
                 </td>
+            
+            <td>
+                
+                    <a asp-action="Details" asp-route-id="@item.VehicleId">Details</a> |
+                    <a asp-action="BookingCreate" asp-controller="Customer" asp-route-id="@item.VehicleId">Book</a>
+                
+            </td>
         </tr>
 }
     </tbody>

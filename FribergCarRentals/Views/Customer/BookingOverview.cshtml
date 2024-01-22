@@ -1,0 +1,86 @@
+﻿@model IEnumerable<FribergCarRentals.Models.Booking>
+
+@{
+    ViewData["Title"] = "BookingOverview";
+}
+
+<h1>Upcoming bookings</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BookingId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookingStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookingEnd)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Where(x => x.BookingEnd >= DateTime.Now)) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookingId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookingStart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookingEnd)
+            </td>
+            <td>
+                
+                <a asp-action="BookingDelete" asp-route-id="@item.BookingId">Delete</a>
+            </td>
+        </tr>
+
+}
+    </tbody>
+</table>
+
+@if (Model.Where(x => x.BookingStart >= DateTime.Now).Any())    //TODO: Fixa !
+{
+    <span>There are no upcoming bookings</span>
+}
+
+<h1>Historical bookings</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BookingId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookingStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookingEnd)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(x => x.BookingStart <= DateTime.Now))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookingId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookingStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookingEnd)
+                </td>
+               
+            </tr>
+        }
+    </tbody>
+</table>

@@ -2,8 +2,9 @@
 using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 
-namespace FribergCarRentals.Controllers
+namespace FribergCarRentals.Controllers.AdminControllers
 {
     public class AdminCustomerController : Controller
     {
@@ -19,11 +20,9 @@ namespace FribergCarRentals.Controllers
         public ActionResult Index(Admin activeAdmin)
         {
             _activeAdmin = activeAdmin;
-            if (_activeAdmin == null)
-            {
-                RedirectToAction("Login", "Admin");
-            }
-            return View(_customerRepo.GetAll());
+            var action = View(_customerRepo.GetAll());
+            return CheckForAdmin(action);
+            
         }
 
         public ActionResult Logout()
@@ -35,7 +34,8 @@ namespace FribergCarRentals.Controllers
         // GET: AdminCustomer/Create
         public ActionResult Create()
         {
-            return View();
+            var action = View();
+            return CheckForAdmin(action);
         }
 
         // POST: AdminCustomer/Create
@@ -43,10 +43,9 @@ namespace FribergCarRentals.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind("CustomerId,FirstName,LastName,Email,Password")] Customer customer)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && _activeAdmin != null)
             {
                 _customerRepo.Create(customer);
-
                 return RedirectToAction(nameof(Index));
             }
             return View(customer);
@@ -55,21 +54,18 @@ namespace FribergCarRentals.Controllers
         // GET: AdminCustomer/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (_activeAdmin == null)
-            {
-                RedirectToAction("Login", "Admin");
-            }
+            Customer? customer = null;
+            var action = View(customer);
             if (id == null)
             {
                 return NotFound();
             }
-
-            var customer = _customerRepo.GetById((int)id);
+            customer = _customerRepo.GetById((int)id);
             if (customer == null)
             {
                 return NotFound();
             }
-            return View(customer);
+            return CheckForAdmin(action);
         }
 
         // POST: AdminCustomer/Edit/5
@@ -81,8 +77,7 @@ namespace FribergCarRentals.Controllers
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && _activeAdmin != null)
             {
                 try
                 {
@@ -90,9 +85,7 @@ namespace FribergCarRentals.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-
                     throw;
-
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -102,22 +95,18 @@ namespace FribergCarRentals.Controllers
         // GET: AdminCustomer/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (_activeAdmin == null)
-            {
-                RedirectToAction("Login", "Admin");
-            }
+            Customer? customer = null;
+            var action = View(customer);
             if (id == null)
             {
                 return NotFound();
             }
-
-            var customer = _customerRepo.GetById((int)id);
+            customer = _customerRepo.GetById((int)id);
             if (customer == null)
             {
                 return NotFound();
             }
-
-            return View(customer);
+            return CheckForAdmin(action);
         }
 
         // POST: AdminCustomer/Delete/5
@@ -126,12 +115,20 @@ namespace FribergCarRentals.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var customer = _customerRepo.GetById(id);
-            if (customer != null)
+            if (customer != null && _activeAdmin != null)
             {
                 _customerRepo.Delete(id);
             }
-
             return RedirectToAction(nameof(Index));
+        }
+
+        private ActionResult CheckForAdmin(ActionResult action)
+        {
+            if (_activeAdmin == null)
+            {
+                action = RedirectToAction("Login", "Admin");
+            }
+            return action;
         }
     }
 }

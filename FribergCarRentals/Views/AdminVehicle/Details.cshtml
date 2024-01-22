@@ -29,13 +29,20 @@
             @Html.DisplayFor(model => model.Year)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DailyRate)
+            @Html.DisplayNameFor(model => model.Comment)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DailyRate)
+            @Html.DisplayFor(model => model.Comment)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ImageUrl)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ImageUrl)
         </dd>
     </dl>
 </div>
 <div>
+    <a asp-action="Edit" asp-route-id="@Model?.VehicleId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

@@ -14,9 +14,10 @@ namespace FribergCarRentals.Models
         public string Model { get; set; }
         [Required]
         public int Year { get; set; }
-        [Required]
-        [DisplayName("Daily rate")]
-        public double DailyRate { get; set; }
+        [DisplayName("Marcus's comment")]
+        public string Comment { get; set; } = "";
+        [DisplayName("Image link")]
+        public string ImageUrl { get; set; }
      
     }
 }

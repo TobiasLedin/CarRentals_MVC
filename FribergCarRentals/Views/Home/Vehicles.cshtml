@@ -1,15 +1,18 @@
 ﻿@model IEnumerable<FribergCarRentals.Models.Vehicle>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Vehicles";
 }
 
-<h1>View</h1>
+<h1>Vehicles available for rent</h1>
 
 
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Brand)
             </th>
@@ -19,15 +22,16 @@
             <th>
                 @Html.DisplayNameFor(model => model.Year)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DailyRate)
-            </th>
+            
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageUrl)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Brand)
             </td>
@@ -37,13 +41,10 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Year)
             </td>
+            
             <td>
-                @Html.DisplayFor(modelItem => item.DailyRate)
-            </td>
-            <td>
-                
-                <a asp-action="Details" asp-route-id="@item.VehicleId">Details</a>
-               
+                <a asp-action="Details" asp-route-id="@item.VehicleId">Details</a> |
+                <a asp-action="BookingCreate" asp-controller="Customer" asp-route-id="@item.VehicleId">Book</a>
             </td>
         </tr>
 }

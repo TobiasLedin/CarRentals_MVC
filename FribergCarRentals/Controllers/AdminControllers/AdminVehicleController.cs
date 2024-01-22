@@ -1,10 +1,11 @@
 ﻿using FribergCarRentals.Data.Interfaces;
 using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Plugins;
 
-namespace FribergCarRentals.Controllers
+namespace FribergCarRentals.Controllers.AdminControllers
 {
     public class AdminVehicleController : Controller
     {
@@ -20,11 +21,8 @@ namespace FribergCarRentals.Controllers
         public ActionResult Index(Admin activeAdmin)
         {
             _activeAdmin = activeAdmin;
-            if (_activeAdmin == null)
-            {
-                RedirectToAction("Login", "Admin");
-            }
-            return View(_vehicleRepo.GetAll());
+            var action = View(_vehicleRepo.GetAll());
+            return CheckForAdmin(action);
         }
 
         public ActionResult Logout()
@@ -33,25 +31,28 @@ namespace FribergCarRentals.Controllers
             return RedirectToAction("Logout", "Admin");
         }
 
+        public ActionResult Details(int id)
+        {
+            var vehicle = _vehicleRepo.GetById(id);
+            var action = View(vehicle);
+            return CheckForAdmin(action);
+        }
+
         // GET: AdminVehicle/Create
         public ActionResult Create()
         {
-            if (_activeAdmin == null)
-            {
-                RedirectToAction("Login", "Admin");
-            }
-            return View();
+            var action = View();
+            return CheckForAdmin(action);
         }
 
         // POST: AdminVehicle/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("VehicleId,Brand,Model,Year,DailyRate")] Vehicle vehicle)
+        public ActionResult Create(Vehicle vehicle)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && _activeAdmin != null)
             {
                 _vehicleRepo.Create(vehicle);
-
                 return RedirectToAction(nameof(Index));
             }
             return View(vehicle);
@@ -60,34 +61,31 @@ namespace FribergCarRentals.Controllers
         // GET: AdminVehicle/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (_activeAdmin == null)
-            {
-                RedirectToAction("Login", "Admin");
-            }
+            
+            
             if (id == null)
             {
                 return NotFound();
             }
-
             var vehicle = _vehicleRepo.GetById((int)id);
             if (vehicle == null)
             {
                 return NotFound();
             }
-            return View(vehicle);
+            var action = View(vehicle);
+            return CheckForAdmin(action);
         }
 
         // POST: AdminVehicle/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, [Bind("VehicleId,Brand,Model,Year,DailyRate")] Vehicle vehicle)
+        public ActionResult Edit(int id, Vehicle vehicle)
         {
             if (id != vehicle.VehicleId)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && _activeAdmin != null)
             {
                 try
                 {
@@ -95,9 +93,7 @@ namespace FribergCarRentals.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-
                     throw;
-
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -107,22 +103,18 @@ namespace FribergCarRentals.Controllers
         // GET: AdminVehicle/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (_activeAdmin == null)
-            {
-                RedirectToAction("Login", "Admin");
-            }
+            Vehicle? vehicle = null;
+            var action = View(vehicle);
             if (id == null)
             {
                 return NotFound();
             }
-
-            var vehicle = _vehicleRepo.GetById((int)id);
+            vehicle = _vehicleRepo.GetById((int)id);
             if (vehicle == null)
             {
                 return NotFound();
             }
-
-            return View(vehicle);
+            return CheckForAdmin(action);
         }
 
         // POST: AdminVehicle/Delete/5
@@ -131,12 +123,20 @@ namespace FribergCarRentals.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             var vehicle = _vehicleRepo.GetById(id);
-            if (vehicle != null)
+            if (vehicle != null && _activeAdmin != null)
             {
                 _vehicleRepo.Delete(id);
             }
-
             return RedirectToAction(nameof(Index));
+        }
+
+        private ActionResult CheckForAdmin(ActionResult action)
+        {
+            if (_activeAdmin == null)
+            {
+                action = RedirectToAction("Login", "Admin");
+            }
+            return action;
         }
     }
 }

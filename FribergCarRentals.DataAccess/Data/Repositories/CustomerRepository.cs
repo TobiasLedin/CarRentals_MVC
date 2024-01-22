@@ -1,37 +1,37 @@
 ﻿using FribergCarRentals.Data.Interfaces;
 using FribergCarRentals.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace FribergCarRentals.Data.Repositories
 {
-    public class BookingRepository : IBookingRepository
+    public class CustomerRepository : ICustomerRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public BookingRepository(ApplicationDbContext applicationDbContext)
+        public CustomerRepository(ApplicationDbContext applicationDbContext)
         {
-            this._applicationDbContext = applicationDbContext;
+            _applicationDbContext = applicationDbContext;
         }
 
-        public void Create(Booking booking)
+        public void Create(Customer customer)
         {
             try
             {
-                _applicationDbContext.Bookings.Add(booking);
+                _applicationDbContext.Customers.Add(customer);
                 _applicationDbContext.SaveChanges();
             }
             catch (Exception)
             {
 
             }
+
         }
 
         public void Delete(int id)
         {
-            var booking = _applicationDbContext.Bookings.Find(id);
+            var customer = _applicationDbContext.Customers.Find(id);
             try
             {
-                _applicationDbContext.Bookings.Remove(booking);
+                _applicationDbContext.Customers.Remove(customer);
                 _applicationDbContext.SaveChanges();
             }
             catch (Exception)
@@ -40,20 +40,20 @@ namespace FribergCarRentals.Data.Repositories
             }
         }
 
-        public IEnumerable<Booking> GetAll()
+        public IEnumerable<Customer> GetAll()
         {
-            IEnumerable<Booking> bookings;
+            IEnumerable<Customer> customers;
             try
             {
-                if (!_applicationDbContext.Bookings.Any())
+                if (!_applicationDbContext.Customers.Any())
                 {
-                    bookings = Enumerable.Empty<Booking>();
+                    customers = Enumerable.Empty<Customer>();
                 }
                 else
                 {
-                    bookings = _applicationDbContext.Bookings.ToList();
+                    customers = _applicationDbContext.Customers.ToList();
                 }
-                return bookings;
+                return customers;
             }
             catch (Exception)
             {
@@ -61,24 +61,25 @@ namespace FribergCarRentals.Data.Repositories
             }
         }
 
-        public Booking GetById(int id)
+        public Customer GetById(int id)
         {
-            if (!_applicationDbContext.Bookings.Any())
+            if (!_applicationDbContext.Customers.Any())
             {
                 return null;
             }
             else
             {
-                var booking = _applicationDbContext.Bookings.Include(x => x.Vehicle).Include(y => y.Customer).FirstOrDefault(z => z.BookingId == id); 
-                return booking;
+                var customer = _applicationDbContext.Customers.Find(id);  //TODO: Utvärdera Find, alt byt till FirstOrDefault().
+                return customer;
             }
+
         }
 
-        public void Update(Booking booking)
+        public void Update(Customer customer)
         {
             try
             {
-                _applicationDbContext.Bookings.Update(booking);
+                _applicationDbContext.Customers.Update(customer);
                 _applicationDbContext.SaveChanges();
             }
             catch (Exception)
