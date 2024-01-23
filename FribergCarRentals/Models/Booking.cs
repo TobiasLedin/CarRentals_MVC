@@ -8,7 +8,7 @@ namespace FribergCarRentals.Models
     public class Booking
     {
         [Key]
-        [DisplayName("Vehicle ID")]
+        [DisplayName("Booking ID")]
         public int BookingId { get; set; }
         [Required]
         [DataType(DataType.Date)]

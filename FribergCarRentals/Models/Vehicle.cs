@@ -15,9 +15,9 @@ namespace FribergCarRentals.Models
         [Required]
         public int Year { get; set; }
         [DisplayName("Marcus's comment")]
-        public string Comment { get; set; } = "";
+        public string? Comment { get; set; }
         [DisplayName("Image link")]
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
      
     }
 }
