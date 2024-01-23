@@ -22,7 +22,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Where(x => x.BookingEnd >= DateTime.Now)) {
+@foreach (var item in Model.Where(x => x.BookingStart >= DateTime.Now)) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.BookingId)
@@ -43,7 +43,7 @@
     </tbody>
 </table>
 
-@if (Model.Where(x => x.BookingStart >= DateTime.Now).Any())    //TODO: Fixa !
+@if (!Model.Where(x => x.BookingStart > DateTime.Now).Any())    //TODO: Fixa !
 {
     <span>There are no upcoming bookings</span>
 }
@@ -67,7 +67,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Where(x => x.BookingStart <= DateTime.Now))
+        @foreach (var item in Model.Where(x => x.BookingStart < DateTime.Now))
         {
             <tr>
                 <td>

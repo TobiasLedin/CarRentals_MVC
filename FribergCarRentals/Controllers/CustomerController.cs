@@ -63,17 +63,30 @@ namespace FribergCarRentals.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CustomerCreate(Customer customer)
+        {
+            if (ModelState.IsValid)
+            {
+                _customerRepo.Create(customer);
+                _activeCustomer = customer;
+            }
+            if (TempData.ContainsKey("VehicleId"))
+            {
+                string vehicleIdString = TempData["VehicleId"].ToString();
+                TempData["VehicleId"] = vehicleIdString;
+
+                return RedirectToAction("BookingCreate", "Customer");
+            }
+            return RedirectToAction("BookingOverview", "Customer");
+        }
+
         public ActionResult Logout()
         {
             _activeCustomer = null;
             return RedirectToAction("Index", "Home");
         }
-
-        // GET: CustomerController/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    return View();
-        //}
 
         public ActionResult BookingOverview()
         {
