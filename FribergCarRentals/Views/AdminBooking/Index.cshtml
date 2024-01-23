@@ -4,12 +4,20 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
+<h2>Upcoming bookings</h2>
 
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BookingId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.BookingStart)
             </th>
@@ -20,20 +28,85 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.BookingStart)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BookingEnd)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BookingId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookingId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookingId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Where(x => x.BookingStart >= DateTime.Now))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookingId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VehicleId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookingStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookingEnd)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.BookingId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.BookingId">Delete</a>
+                </td>
+            </tr>
+
+        }
     </tbody>
 </table>
+
+@if (!Model.Where(x => x.BookingStart > DateTime.Now).Any())    //TODO: Fixa !
+{
+    <span>There are no upcoming bookings</span>
+}
+
+<h2>Historical bookings</h2>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BookingId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookingStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookingEnd)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where(x => x.BookingStart < DateTime.Now))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookingId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VehicleId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookingStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BookingEnd)
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+

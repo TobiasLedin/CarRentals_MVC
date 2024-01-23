@@ -2,7 +2,7 @@
 using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Plugins;
+using System.Diagnostics;
 
 namespace FribergCarRentals.Controllers.AdminControllers
 {
@@ -31,6 +31,13 @@ namespace FribergCarRentals.Controllers.AdminControllers
             return RedirectToAction("Logout", "Admin");
         }
 
+        public ActionResult Details(int id)
+        {
+            var customer = _customerRepo.GetById(id);
+            var action = View(customer);
+            return CheckForAdmin(action);
+        }
+
         // GET: AdminCustomer/Create
         public ActionResult Create()
         {
@@ -41,7 +48,7 @@ namespace FribergCarRentals.Controllers.AdminControllers
         // POST: AdminCustomer/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("CustomerId,FirstName,LastName,Email,Password")] Customer customer)
+        public ActionResult Create(Customer customer)
         {
             if (ModelState.IsValid && _activeAdmin != null)
             {
@@ -83,9 +90,9 @@ namespace FribergCarRentals.Controllers.AdminControllers
                 {
                     _customerRepo.Update(customer);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception)
                 {
-                    throw;
+                    return View(nameof(Error));
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -117,7 +124,14 @@ namespace FribergCarRentals.Controllers.AdminControllers
             var customer = _customerRepo.GetById(id);
             if (customer != null && _activeAdmin != null)
             {
-                _customerRepo.Delete(id);
+                try
+                {
+                    _customerRepo.Delete(id);
+                }
+                catch (Exception) 
+                {
+                    return View(nameof(Error));
+                }
             }
             return RedirectToAction(nameof(Index));
         }
@@ -129,6 +143,12 @@ namespace FribergCarRentals.Controllers.AdminControllers
                 action = RedirectToAction("Login", "Admin");
             }
             return action;
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public ActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

@@ -1,9 +1,6 @@
 ﻿using FribergCarRentals.Data.Interfaces;
 using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Plugins;
 
 namespace FribergCarRentals.Controllers.AdminControllers
 {
@@ -61,8 +58,6 @@ namespace FribergCarRentals.Controllers.AdminControllers
         // GET: AdminVehicle/Edit/5
         public ActionResult Edit(int? id)
         {
-            
-            
             if (id == null)
             {
                 return NotFound();
@@ -91,9 +86,9 @@ namespace FribergCarRentals.Controllers.AdminControllers
                 {
                     _vehicleRepo.Update(vehicle);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception)
                 {
-                    throw;
+                    return RedirectToAction("Error");       //TODO: Consistency in error catching?
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -103,17 +98,18 @@ namespace FribergCarRentals.Controllers.AdminControllers
         // GET: AdminVehicle/Delete/5
         public ActionResult Delete(int? id)
         {
-            Vehicle? vehicle = null;
-            var action = View(vehicle);
+            
+            
             if (id == null)
             {
                 return NotFound();
             }
-            vehicle = _vehicleRepo.GetById((int)id);
+            var vehicle = _vehicleRepo.GetById((int)id);
             if (vehicle == null)
             {
                 return NotFound();
             }
+            var action = View(vehicle);
             return CheckForAdmin(action);
         }
 

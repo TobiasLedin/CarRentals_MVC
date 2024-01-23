@@ -1,6 +1,7 @@
 ﻿using FribergCarRentals.Data.Interfaces;
 using FribergCarRentals.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace FribergCarRentals.Controllers.AdminControllers
 {
@@ -28,20 +29,27 @@ namespace FribergCarRentals.Controllers.AdminControllers
             return RedirectToAction("Logout", "Admin");
         }
 
+        public ActionResult Details(int id) 
+        {
+            var booking = _bookingRepo.GetById(id);
+            var action = View(booking);
+            return CheckForAdmin(action);
+        }
+
         // GET: AdminBooking/Delete/5
         public ActionResult Delete(int? id)
         {
-            Booking? booking = null;
-            var action = View(booking);
+            
             if (id == null)
             {
                 return NotFound();
             }
-            booking = _bookingRepo.GetById((int)id);
+            var booking = _bookingRepo.GetById((int)id);
             if (booking == null)
             {
                 return NotFound();
             }
+            var action = View(booking);
             return CheckForAdmin(action);
         }
 
@@ -53,7 +61,15 @@ namespace FribergCarRentals.Controllers.AdminControllers
             var booking = _bookingRepo.GetById(id);
             if (booking != null && _activeAdmin != null)
             {
-                _bookingRepo.Delete(id);
+                try
+                {
+                    _bookingRepo.Delete(id);
+                }
+                catch(Exception)
+                {
+                    return View(nameof(Error));
+                }
+                
             }
             return RedirectToAction(nameof(Index));
         }
@@ -65,6 +81,12 @@ namespace FribergCarRentals.Controllers.AdminControllers
                 action = RedirectToAction("Login", "Admin");
             }
             return action;
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public ActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

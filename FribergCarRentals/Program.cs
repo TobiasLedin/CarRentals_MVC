@@ -6,6 +6,7 @@ using System.Drawing;
 using System;
 using FribergCarRentals.Data.Interfaces;
 using FribergCarRentals.Data.Repositories;
+using Microsoft.Extensions.Options;
 
 namespace FribergCarRentals
 {
@@ -15,8 +16,11 @@ namespace FribergCarRentals
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = CarRentalDB; Integrated Security = True; Connect Timeout = 30; Encrypt = False; Trust Server Certificate = False; Application Intent = ReadWrite; Multi Subnet Failover = False")
-            );  //TODO: Hide connectionstring in AppSettings.json
+            options.UseSqlServer(new ConfigurationBuilder()
+            .AddJsonFile("appsettings.Development.json")
+            .Build()
+            .GetConnectionString("DefaultConnection"))
+            );
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
